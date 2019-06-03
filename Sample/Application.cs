@@ -24,6 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using log4net;
 using log4net.Config;
+using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Marketplace.Sample.Controllers;
 
@@ -54,8 +55,8 @@ namespace Walmart.Sdk.Marketplace.Sample
         private void InitSdk()
         {
             var ClientConfig = new ClientConfig(
-                Config.Creds.ConsumerId,
-                Config.Creds.PrivateKey
+                Config.Creds.ClientId,
+                Config.Creds.ClientSecret
             );
             if (!String.IsNullOrWhiteSpace(Config.BaseUrl))
             {
@@ -71,10 +72,10 @@ namespace Walmart.Sdk.Marketplace.Sample
             }
             
 
-            Client = new ApiClient(ClientConfig)
+            Client = new ApiClient(ClientConfig,new MockTokenCacheProvider())
             {
                 SimulationEnabled = Config.Simulation,
-                Logger = Config.Logging ? (ILoggerAdapter)new LoggerAdapter() : new NullLogger()
+                Logger = Config.Logging ? (ILoggerAdapter)new LoggerAdapter() : new NullLogger(),
             };
         }
 
@@ -279,6 +280,21 @@ namespace Walmart.Sdk.Marketplace.Sample
 
             ConsoleWriter.WriteLine("");
             return key;
+        }
+    }
+
+    public class MockTokenCacheProvider : IAccessTokenCacheProvider
+    {
+        private static string storedtoken;
+        public Task<string> GetStoredToken()
+        {
+            return Task.FromResult(storedtoken);
+        }
+
+        public Task SetStoredToken(string token)
+        {
+            storedtoken = token;
+            return Task.FromResult("");
         }
     }
 }

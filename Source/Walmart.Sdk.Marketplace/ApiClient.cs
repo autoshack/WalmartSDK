@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Marketplace.V3.Payload;
 
@@ -24,7 +25,7 @@ namespace Walmart.Sdk.Marketplace
 {
     public class ApiClient: BaseApiClient
     {
-        public ApiClient(Base.Primitive.Config.IApiClientConfig config) : base(config)
+        public ApiClient(Base.Primitive.Config.IApiClientConfig config, IAccessTokenCacheProvider tokenCacheProvider) : base(config,tokenCacheProvider)
         {
         }
     }

@@ -24,6 +24,9 @@ namespace Walmart.Sdk.Base.Http
     public interface IRequest
     {
         string EndpointUri { get; }
+
+        Primitive.Config.IRequestConfig Config { get; }
+
         HttpRequestMessage HttpRequest { get; }
         void FinalizePreparation();
         HttpMethod Method { get; set; }

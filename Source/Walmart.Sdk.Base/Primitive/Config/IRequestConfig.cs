@@ -23,11 +23,15 @@ namespace Walmart.Sdk.Base.Primitive.Config
     public interface IRequestConfig
     {
         ApiFormat ApiFormat { get; }
+        ContentTypeFormat ContentType { get; set; }
+        string AccessToken { get; set; }
         string BaseUrl { get; }
         string ServiceName { get; }
         string ChannelType { get; }
         string UserAgent { get; }
         Credentials Credentials { get; }
         int RequestTimeoutMs { get; }
+
+        
     }
 }

@@ -26,8 +26,9 @@ namespace Walmart.Sdk.Base.Primitive
     public class BaseConfig: IRequestConfig, IApiClientConfig
     {
         public Credentials Credentials { get; private set; }
+        public ContentTypeFormat ContentType { get; set; }
         public string BaseUrl { get; set; } = "https://marketplace.walmartapis.com";
-        virtual public string ServiceName { get; set; } = "";
+        virtual public string ServiceName { get; set; } = "Walmart Marketplace";
         public string ChannelType { get; set; }
         public string UserAgent { get; set; }
         public ApiFormat PayloadFormat { get; set; } = ApiFormat.XML;
@@ -39,15 +40,17 @@ namespace Walmart.Sdk.Base.Primitive
             set { PayloadFormat = value; }
         }
         public int RequestTimeoutMs { get; set; } = 100000; // in milliseconds
+        public string AccessToken { get; set; }
 
-        public BaseConfig(string consumerId, string privateKey)
+        public BaseConfig(string clientId, string clientSecret,string accessToken="")
         {
+            AccessToken = accessToken;
             // generate sdk name from an assembly information
             var assembly = this.GetType().GetTypeInfo().Assembly;
-            UserAgent = string.Format(".Net_{0}_v{1}_{2}", assembly.GetName().Name, assembly.GetName().Version.ToString(), consumerId);
+            UserAgent = string.Format(".Net_{0}_v{1}_{2}", assembly.GetName().Name, assembly.GetName().Version.ToString(), clientId);
 
             // storing user credentials
-            Credentials = new Credentials(consumerId, privateKey);
+            Credentials = new Credentials(clientId, clientSecret);
         }
 
         public IRequestConfig GetRequestConfig() => this;
@@ -59,17 +62,24 @@ namespace Walmart.Sdk.Base.Primitive
         XML,
         JSON,
     }
+
+    public enum ContentTypeFormat
+    {
+        XML,
+        JSON,
+        FORM_URLENCODED
+    }
     
     // Merchant Credentials
     public class Credentials
     {
-        public string PrivateKey { get; private set; }
-        public string ConsumerId { get; private set; }
+        public string ClientId { get; private set; }
+        public string ClientSecret { get; private set; }
 
-        public Credentials(string id, string key)
+        public Credentials(string clientId, string clientSecret)
         {
-            PrivateKey = key;
-            ConsumerId = id;
+            this.ClientId = clientId;
+            this.ClientSecret = clientSecret;
         }
     }
 }

@@ -63,6 +63,11 @@ namespace Walmart.Sdk.Base.Http.Fetcher
                     throw new ThrottleException("HTTP request was throttled");
                 }
 
+                if (response.StatusCode == (HttpStatusCode.Unauthorized) || response.StatusCode==HttpStatusCode.BadRequest)
+                {
+                    throw new InvalidAccessTokenException("Access token is not valid");
+                }
+
                 return response;
             }
             catch (System.Exception ex) when (IsNetworkError(ex) || ex is TaskCanceledException)

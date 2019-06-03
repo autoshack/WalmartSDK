@@ -1,6 +1,6 @@
 {
   "ServiceName": "Walmart Marketplace",
-  "ChannelType": "f681e317-d3cd-4d26-b588-0cd3b5305130",
+  "ChannelType": "0f3e4dd4-0514-4346-b39d-af0e00ea066d",
   "BaseUrl": "https://marketplace.walmartapis.com",
   "Simulation": false,
   "Logging": true

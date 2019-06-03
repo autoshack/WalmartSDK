@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Base.Http
     {
         public static IFetcherFactory FetcherFactory = new Http.Fetcher.FetcherFactory();
 
-        private IHttpConfig config;
+        protected IHttpConfig config;
 
         public IFetcher Fetcher { get; private set; }
 
@@ -49,7 +49,7 @@ namespace Walmart.Sdk.Base.Http
             RetryPolicy = new Retry.LuckyMePolicy();
         }
 
-        private Task<IResponse> ExecuteAsync(IRequest request)
+        protected virtual Task<IResponse> ExecuteAsync(IRequest request)
         {
             return RetryPolicy.GetResponse(Fetcher, request);
         }

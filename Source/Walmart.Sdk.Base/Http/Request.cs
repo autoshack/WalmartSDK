@@ -20,6 +20,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Utilities.Encoders;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 
@@ -84,30 +85,28 @@ namespace Walmart.Sdk.Base.Http
 
         public void FinalizePreparation()
         {
-            HttpRequest.Headers.Add("User-Agent", config.UserAgent.Replace(" ", "_"));
+          
             HttpRequest.RequestUri = new Uri(config.BaseUrl + EndpointUri + BuildQueryParams());
-            // call to genereate walmart headers should be done when RequestUri already defined
-            // we need it's value to generate signature header
             AddWalmartHeaders();
         }
 
         private void AddWalmartHeaders()
         {
-            string timestamp = Util.DigitalSignature.GetCurrentTimestamp();
-            string signature = GetSignature(timestamp);
+            HttpRequest.Headers.Clear();
+            var authHeaderValue = GetAuthorizationHeader();
 
-            var creds = config.Credentials;
-            HttpRequest.Headers.Add("WM_SEC.AUTH_SIGNATURE", signature);
-            HttpRequest.Headers.Add("WM_SEC.TIMESTAMP", timestamp);
-            HttpRequest.Headers.Add("WM_CONSUMER.CHANNEL.TYPE", config.ChannelType);
-            HttpRequest.Headers.Add("WM_CONSUMER.ID", creds.ConsumerId);
             HttpRequest.Headers.Add("WM_SVC.NAME", config.ServiceName);
-            HttpRequest.Headers.Add("WM_QOS.CORRELATION_ID", Util.DigitalSignature.GetCorrelationId());
+            HttpRequest.Headers.Add("WM_QOS.CORRELATION_ID", config.ServiceName);
+            HttpRequest.Headers.Add("Authorization", $"Basic {authHeaderValue}");
+            HttpRequest.Headers.Add("Accept", GetAcceptType());
 
-            HttpRequest.Headers.Add("Accept", GetContentType());
+            if (!string.IsNullOrEmpty(config.AccessToken))
+            {
+                HttpRequest.Headers.Add("WM_SEC.ACCESS_TOKEN",config.AccessToken);
+            }
         }
 
-        public string GetContentType()
+        public string GetAcceptType()
         {
             switch (config.ApiFormat)
             {
@@ -118,7 +117,36 @@ namespace Walmart.Sdk.Base.Http
                     return "application/xml";
             }
         }
+        public string GetContentType()
+        {
+            switch (config.ContentType)
+            {
+                case ContentTypeFormat.JSON:
+                    return "application/json";
+                case ContentTypeFormat.FORM_URLENCODED:
+                    return "application/x-www-form-urlencoded";
+                default:
+                case ContentTypeFormat.XML:
+                    return "application/xml";
+              
+            }
+        }
 
+        private string GetAuthorizationHeader()
+        {
+           return Base64Encode($"{config.Credentials.ClientId}:{config.Credentials.ClientSecret}");
+        }
+
+        private string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        private void SetAccessToken(string accessToken)
+        {
+            this.Config.AccessToken = accessToken;
+        }
         private string GetSignature(string timestamp)
         {
             if (config.Credentials is null)
@@ -131,7 +159,7 @@ namespace Walmart.Sdk.Base.Http
             var httpMethod = HttpRequest.Method.Method.ToUpper();
             // Construct the string to sign
             string stringToSign = string.Join("\n", new List<string>() {
-                creds.ConsumerId,
+                //creds.ConsumerId,
                 requestUri,
                 httpMethod,
                 timestamp
@@ -139,12 +167,12 @@ namespace Walmart.Sdk.Base.Http
 
             try
             {
-                return Util.DigitalSignature.SignData(stringToSign, creds.PrivateKey);
+                return Util.DigitalSignature.SignData(stringToSign, creds.ClientSecret);
             }
             catch (System.Exception ex)
             {
                 //pop up this to the user of SDK 
-                throw Base.Exception.SignatureException.Factory(creds.ConsumerId, requestUri, httpMethod, ex);
+                throw Base.Exception.SignatureException.Factory(creds.ClientId, requestUri, httpMethod, ex);
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Base.Primitive
 {
     public abstract class BaseApiClient: IApiClient, IEndpointClient
     {
-        protected IHttpFactory httpFactory = new HttpFactory();
+        protected IHttpFactory httpFactory = new OAuthHttpFactory();
         
         protected IHandler httpHandler;
         public IEndpointHttpHandler GetHttpHandler() => httpHandler;
@@ -33,10 +33,10 @@ namespace Walmart.Sdk.Base.Primitive
         protected Config.IEndpointConfig config;
         public Config.IEndpointConfig GetEndpointConfig() => config;
 
-        public BaseApiClient(Config.IApiClientConfig cfg)
+        public BaseApiClient(Config.IApiClientConfig cfg,IAccessTokenCacheProvider cacheProvider)
         {
             config = cfg;
-            httpHandler = httpFactory.GetHttpHandler(cfg);
+            httpHandler = httpFactory.GetHttpHandler(cfg,cacheProvider);
         }
 
         public bool SimulationEnabled

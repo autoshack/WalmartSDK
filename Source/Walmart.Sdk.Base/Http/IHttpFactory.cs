@@ -17,11 +17,12 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Walmart.Sdk.Base.Primitive.Config;
 
 namespace Walmart.Sdk.Base.Http
 {
     public interface IHttpFactory
     {
-        IHandler GetHttpHandler(Base.Primitive.Config.IHttpConfig cfg);
+        IHandler GetHttpHandler(Base.Primitive.Config.IHttpConfig cfg,IAccessTokenCacheProvider tokenCacheProvider);
     }
 }
