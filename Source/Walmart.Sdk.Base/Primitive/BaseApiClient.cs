@@ -33,7 +33,7 @@ namespace Walmart.Sdk.Base.Primitive
         protected Config.IEndpointConfig config;
         public Config.IEndpointConfig GetEndpointConfig() => config;
 
-        public BaseApiClient(Config.IApiClientConfig cfg,IAccessTokenCacheProvider cacheProvider)
+        public BaseApiClient(Config.IApiClientConfig cfg,ICacheProvider cacheProvider)
         {
             config = cfg;
             httpHandler = httpFactory.GetHttpHandler(cfg,cacheProvider);

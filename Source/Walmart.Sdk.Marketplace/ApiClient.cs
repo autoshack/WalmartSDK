@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Marketplace
 {
     public class ApiClient: BaseApiClient
     {
-        public ApiClient(Base.Primitive.Config.IApiClientConfig config, IAccessTokenCacheProvider tokenCacheProvider) : base(config,tokenCacheProvider)
+        public ApiClient(Base.Primitive.Config.IApiClientConfig config, ICacheProvider cacheProvider) : base(config,cacheProvider)
         {
         }
     }

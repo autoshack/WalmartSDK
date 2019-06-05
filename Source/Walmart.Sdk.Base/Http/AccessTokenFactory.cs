@@ -12,27 +12,27 @@ using Walmart.Sdk.Base.Serialization;
 
 namespace Walmart.Sdk.Base.Http
 {
-    class AccessTokenFactory:IAccessTokenFactory
+    class AccessTokenFactory : IAccessTokenFactory
     {
         private IFetcher _fetcher;
+
         public AccessTokenFactory(IFetcher fetcher)
         {
             _fetcher = fetcher;
         }
+
         public async Task<string> RetrieveAccessToken(Credentials credentials)
         {
             IRequestConfig config = new BaseConfig(credentials.ClientId, credentials.ClientSecret)
             {
                 ContentType = ContentTypeFormat.FORM_URLENCODED,
                 ApiFormat = ApiFormat.JSON
-
             };
 
             var request = new Request(config)
             {
                 EndpointUri = "/v3/token",
                 Method = HttpMethod.Post,
-
             };
 
             var grantType = "client_credentials";
@@ -49,7 +49,7 @@ namespace Walmart.Sdk.Base.Http
                     throw new GatewayException("Service is unavailable, gateway connection error");
                 }
 
-                if (response.StatusCode == (HttpStatusCode)429)
+                if (response.StatusCode == (HttpStatusCode) 429)
                 {
                     // 429 Too many requests
                     throw new ThrottleException("HTTP request was throttled");
@@ -63,12 +63,9 @@ namespace Walmart.Sdk.Base.Http
             }
             catch (System.Exception ex)
             {
-                // unable to connect to API because of network/timeout
                 throw new ConnectionException("An error occured while trying to retrieve token", ex);
             }
         }
-
-
     }
 
     internal interface IAccessTokenFactory

@@ -17,13 +17,14 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Base.Primitive.Config;
 
 namespace Walmart.Sdk.Base.Http
 {
     public class HttpFactory: IHttpFactory
     {
-        public IHandler GetHttpHandler(IHttpConfig cfg, IAccessTokenCacheProvider tokenCacheProvider)
+        public IHandler GetHttpHandler(IHttpConfig cfg, ICacheProvider cacheProvider)
         {
             return new Http.Handler(cfg);
         }

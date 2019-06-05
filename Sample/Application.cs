@@ -1,4 +1,6 @@
-﻿/**
+﻿using log4net;
+using log4net.Config;
+/**
 Copyright (c) 2018-present, Walmart Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using log4net;
-using log4net.Config;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Marketplace.Sample.Controllers;
@@ -72,7 +70,7 @@ namespace Walmart.Sdk.Marketplace.Sample
             }
             
 
-            Client = new ApiClient(ClientConfig,new MockTokenCacheProvider())
+            Client = new ApiClient(ClientConfig,new InMemoryCacheProvider())
             {
                 SimulationEnabled = Config.Simulation,
                 Logger = Config.Logging ? (ILoggerAdapter)new LoggerAdapter() : new NullLogger(),
@@ -280,21 +278,6 @@ namespace Walmart.Sdk.Marketplace.Sample
 
             ConsoleWriter.WriteLine("");
             return key;
-        }
-    }
-
-    public class MockTokenCacheProvider : IAccessTokenCacheProvider
-    {
-        private static string storedtoken;
-        public Task<string> GetStoredToken()
-        {
-            return Task.FromResult(storedtoken);
-        }
-
-        public Task SetStoredToken(string token)
-        {
-            storedtoken = token;
-            return Task.FromResult("");
         }
     }
 }

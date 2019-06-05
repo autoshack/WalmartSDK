@@ -13,21 +13,20 @@ namespace Walmart.Sdk.Base.Http
 {
     class OAuthHttpHandler : Handler
     {
-
-        private IAccessTokenCacheProvider tokenCacheProvider;
+        private ICacheProvider _cacheProvider;
         private IAccessTokenFactory _accessTokenFactory;
-        public OAuthHttpHandler(IHttpConfig apiConfig,IAccessTokenCacheProvider cacheProvider):base(apiConfig)
+        private string accessTokenCacheKey = "access_token";
+
+        public OAuthHttpHandler(IHttpConfig apiConfig, ICacheProvider cacheProvider) : base(apiConfig)
         {
             //TODO: Change retry policy?
             RetryPolicy = new Retry.LuckyMePolicy();
-            tokenCacheProvider = cacheProvider;
+            _cacheProvider = cacheProvider;
             _accessTokenFactory = new AccessTokenFactory(this.Fetcher);
         }
 
         protected override async Task<IResponse> ExecuteAsync(IRequest request)
         {
-          
-
             request.Config.AccessToken = await GetAccessToken(request.Config.Credentials);
             try
             {
@@ -38,32 +37,25 @@ namespace Walmart.Sdk.Base.Http
                 await RefreshAccessToken(request.Config.Credentials);
                 return await ExecuteAsync(request);
             }
-            
-
-           
-            
         }
 
         private async Task<string> RefreshAccessToken(Credentials credentials)
         {
-            await this.tokenCacheProvider.SetStoredToken(null);
+            await this._cacheProvider.Remove(accessTokenCacheKey);
             return await GetAccessToken(credentials);
         }
 
         private async Task<string> GetAccessToken(Credentials credentials)
         {
-            var accessToken = await this.tokenCacheProvider.GetStoredToken();
+            var accessToken = await this._cacheProvider.Get(accessTokenCacheKey);
 
-            if (string.IsNullOrEmpty(accessToken))
+            if (accessToken is null)
             {
                 accessToken = await _accessTokenFactory.RetrieveAccessToken(credentials);
-                await this.tokenCacheProvider.SetStoredToken(accessToken);
+                await this._cacheProvider.Set(accessTokenCacheKey, accessToken);
             }
 
-            return accessToken;
+            return accessToken.ToString();
         }
-
-
- 
     }
 }
