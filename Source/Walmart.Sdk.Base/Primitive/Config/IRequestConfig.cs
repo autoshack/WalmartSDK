@@ -31,7 +31,9 @@ namespace Walmart.Sdk.Base.Primitive.Config
         string UserAgent { get; }
         Credentials Credentials { get; }
         int RequestTimeoutMs { get; }
-
-        
+        string TenantId { get; set; }
+        string LocaleId { get; set; }
     }
+
+   
 }

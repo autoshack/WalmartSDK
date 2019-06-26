@@ -27,31 +27,32 @@ namespace Walmart.Sdk.Base.Http
 
         protected override async Task<IResponse> ExecuteAsync(IRequest request)
         {
-            request.Config.AccessToken = await GetAccessToken(request.Config.Credentials);
+            request.Config.AccessToken = await GetAccessToken(request.Config);
             try
             {
                 return await RetryPolicy.GetResponse(Fetcher, request);
             }
             catch (InvalidAccessTokenException ex)
             {
-                await RefreshAccessToken(request.Config.Credentials);
+                await RefreshAccessToken(request.Config);
+                //await request.RecreateRequestAsync();
                 return await ExecuteAsync(request);
             }
         }
 
-        private async Task<string> RefreshAccessToken(Credentials credentials)
+        private async Task<string> RefreshAccessToken(IRequestConfig config)
         {
             await this._cacheProvider.Remove(accessTokenCacheKey);
-            return await GetAccessToken(credentials);
+            return await GetAccessToken(config);
         }
 
-        private async Task<string> GetAccessToken(Credentials credentials)
+        private async Task<string> GetAccessToken(IRequestConfig config)
         {
             var accessToken = await this._cacheProvider.Get(accessTokenCacheKey);
 
             if (accessToken is null)
             {
-                accessToken = await _accessTokenFactory.RetrieveAccessToken(credentials);
+                accessToken = await _accessTokenFactory.RetrieveAccessToken(config);
                 await this._cacheProvider.Set(accessTokenCacheKey, accessToken);
             }
 

@@ -25,5 +25,7 @@ namespace Walmart.Sdk.Base.Primitive
         ILoggerAdapter Logger { get; set; }
         bool SimulationEnabled { get; set; }
         Http.Retry.IRetryPolicy RetryPolicy { get; set; }
+
+        Config.IApiClientConfig GetConfig();
     }
 }

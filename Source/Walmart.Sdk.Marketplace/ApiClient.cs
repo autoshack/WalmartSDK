@@ -20,6 +20,8 @@ using System.Text;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Marketplace.V3.Payload;
+using System.Xml.Serialization;
+using Walmart.Sdk.Marketplace.V3.Payload.Item;
 
 namespace Walmart.Sdk.Marketplace
 {

@@ -52,22 +52,49 @@ namespace Walmart.Sdk.Marketplace.Sample
 
         private void InitSdk()
         {
+
+
             var ClientConfig = new ClientConfig(
-                Config.Creds.ClientId,
-                Config.Creds.ClientSecret
+                "f986fe2d-f6ca-4b81-b4b3-34feafcfb781",
+                "Kli2RavIwIk-U1BAY27OKfAmWTYNbmUwEJ01WdKU7kTvD71iP5Yn6ZL5NB7y2f6V14RFvfuCjmWcwXBgksOh-g",
+                AuthenticationType.OAuth
             );
+
+            /*****US*********/
+            //var ClientConfig = new ClientConfig(
+            //    "edd24ae9-4b4f-47ff-91e8-e049df5afa53",
+            //    "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALNvTn+M7RWNmRggk6FdWpHXbw9oGjQwEAPJKwINAam8CUBdC6upbSWlkw3qmr3B0KhdQYFvS9gAAh7jYHlkZcYjvOOqGluNnuhMVpEN1rK43ZVlrFqSstEPnx52XebP8pM1jrqmc9pvc3uwO59uHXTVANdttkF4JE80unLmqRsJAgMBAAECgYAsrssdeDqR43D8USByToz/RGajr4jW9iEG0FGlcRe47Npg7Mq7NLW5akH0dTeTiXAsfQyS7uQ0JcxhZL3hfN7azWAAiWg9/SG1tLbHqFzuC4BPS+h4KhfDOgzjc+ngSzy1kVmUepPATpStL38lKZoRkTntX/UxJYYG7BWmw18bAQJBAOpX/3W8E2XUWJZhvzvlicX5YyJpEPva7UqN5bvjGENID0EgXn0C3+Pi9ipZQA0QbRQ9eVAOzHDQgRjSNy9ImI8CQQDEBEv2fUmTt7F+CvZ6BuUNRSgIKR8iI3oUH9FP2t3HcUd/vROQNtTcjZODLli3ZnSAVPVNTNX9bTW7FR00xm7nAkEAliuv87WDRLTv0+ZtkqeEQ06N3YYwsQRZHXaS6nUbnjn2NIjWpAuMh89wajDpX7XQALFoJQpmrkCfCdXkMTO3NwJAFlF+7LPbOsyBkx5gbgh28AndwwAboWF0tvHgfT0oX1sQjwTSQ2ta1Tnxf9A5Hbi2rx39SC3ld5OFuKVwy9+EJQJBAMNbYbb7FV/mUEQbnmGQb8WVDKsktl6KR/TC0OcUr3XgE0ejDBMYYa4kdf3We8xx4BQt8SDRjm8a1fq3+BwIyOo=",
+            //    AuthenticationType.SignatureBased
+            //);
+            //ClientConfig.ChannelType = "0f3e4dd4-0514-4346-b39d-af0e00ea066d";
+
+
+
+            /*****CA*******/
+            //var ClientConfig = new ClientConfig(
+            //    "260c4c6f-3558-40c6-afc1-e7fed16a5151",
+            //    "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAJlRWMIiuXLPBEp0v4C/qB/U9sFkLy0PrHhdNBtNcRJG1YGsNDES6mtkKPsDHMAsfMJNHHEBgXAnOgAS1cQIZEkXL9r2jjqM+bHXvOhu6LVQTUh9ZV2KsM0dUY2PUjjdNA1AHt+yoY6tHssTONO5TdpSN0WwYCIpTjKqLzqQqAjrAgMBAAECgYAwh/Bpm2ZKcj8wdl48Ge7VDKuDMfxA7kow24fn8I6PM37YCjOHKS6tCcpzElwidLKVKqWLG+fmIXSZm1yxLdrYTh/6gYp+Q6Otjc2v8/GfIvQW4jErYblJCnjnZYanJ8GYOt+s98aAVUziIusdzc27wIwKPEznpejVZFoIhf/IgQJBANjaEKJRMQY9zWpyFD39KUrchfUcaBvkLhCtd4QvwzFPWwQwp62Y9EyC/dIJCXTQ6dSX6nyw1tLgeqhvjWqKqysCQQC0/wSLVoW64ocHh/DvrpwFAXoUL8PZyBuNy6NyKdGD82fzsQNFhLIsBhiOx44JEBD0Y2je6tZEawmGU/JnAjlBAkEAlE5G9AvdIGyiEPumNmLum6FICEN+PB0JGCTayU+1CgNAtxPjiYlDAxTPLJc7nWXHlbq0BsUWlrApkwp/x+7AcwJBAK3lToJpMLcrqbxMmepOgsw0bQw0ECGPpxmHC5RGJWx3UerKqXADXAP8H2AezpJag0+qqzlxu0ek51POF9lsQ4ECQQCvBeUuFFg7esVbtzCwa4HnNz972wmVYEPnwrd4d7PVswCGQcnpcrAxJQlC3Xrwpr5eUV5UXRUvLlJ5lUXK6WXU",
+            //    AuthenticationType.SignatureBased
+            //);
+            //ClientConfig.ChannelType = "0f3e4dd4-0514-4346-b39d-af0e00ea066d";
+            //ClientConfig.TenantId = "WALMART.CA";
+            //ClientConfig.LocaleId = "en_CA";
+            //ClientConfig.CountryPrefix = "ca";
+
+            ClientConfig.ServiceName = "KapSYS Walmart";
+
             if (!String.IsNullOrWhiteSpace(Config.BaseUrl))
             {
                 ClientConfig.BaseUrl = Config.BaseUrl;
             }
-            if (!String.IsNullOrWhiteSpace(Config.ChannelType))
-            {
-                ClientConfig.ChannelType = Config.ChannelType;
-            }
-            if (!String.IsNullOrWhiteSpace(Config.ServiceName))
-            {
-                ClientConfig.ServiceName = Config.ServiceName;
-            }
+            //if (!String.IsNullOrWhiteSpace(Config.ChannelType))
+            //{
+            //    ClientConfig.ChannelType = Config.ChannelType;
+            //}
+            //if (!String.IsNullOrWhiteSpace(Config.ServiceName))
+            //{
+            //    ClientConfig.ServiceName = Config.ServiceName;
+            //}
             
 
             Client = new ApiClient(ClientConfig,new InMemoryCacheProvider())

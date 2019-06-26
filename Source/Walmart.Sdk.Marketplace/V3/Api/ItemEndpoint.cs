@@ -21,7 +21,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Base.Primitive;
     using Walmart.Sdk.Marketplace.V3.Payload.Feed;
 
-    public class ItemEndpoint: Base.Primitive.BaseEndpoint
+    public class ItemEndpoint: ApiEndpoint
     {
         protected FeedEndpoint feedApi;
         public ItemEndpoint(Base.Primitive.IEndpointClient apiClient) : base(apiClient)
@@ -41,7 +41,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = "/v3/items";
+            request.EndpointUri = BuildEndpointUrl("items");
 
             if (limit > 0) request.QueryParams.Add("limit", limit.ToString());
             if (offset > 0) request.QueryParams.Add("offset", offset.ToString());
@@ -57,7 +57,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = string.Format("/v3/items/{0}", merchantSku);
+            request.EndpointUri = BuildEndpointUrl($"items/{merchantSku}");
 
             var response = await client.GetAsync(request);
             ItemResponses result = await ProcessResponse<ItemResponses>(response);
@@ -69,7 +69,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = string.Format("/v3/items/{0}", merchantSku);
+            request.EndpointUri = BuildEndpointUrl($"items/{merchantSku}"); 
 
             var response = await client.DeleteAsync(request);
             ItemRetireResponse result = await ProcessResponse<ItemRetireResponse>(response);

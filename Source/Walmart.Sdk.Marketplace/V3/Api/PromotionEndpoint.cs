@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Marketplace.V3.Payload.Promotion;
     using Walmart.Sdk.Marketplace.V3.Payload;
 
-    public class PromotionEndpoint : Base.Primitive.BaseEndpoint
+    public class PromotionEndpoint : ApiEndpoint
     {
         protected FeedEndpoint feedApi;
         public PromotionEndpoint(Base.Primitive.IEndpointClient apiClient) : base(apiClient)

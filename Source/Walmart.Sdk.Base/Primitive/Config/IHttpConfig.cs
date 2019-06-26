@@ -25,5 +25,6 @@ namespace Walmart.Sdk.Base.Primitive.Config
         ApiFormat ApiFormat { get; set; }
         int RequestTimeoutMs { get; }
         string BaseUrl { get; }
+        AuthenticationType AuthType { get; set; }
     }
 }

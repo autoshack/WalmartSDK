@@ -15,8 +15,8 @@ namespace Walmart.Sdk.Marketplace.Sample
             Set("ChannelType", config.ChannelType);
             Set("ServiceName", config.ServiceName);
             Set("StartupMessage", config.StartupMessage);
-            Set("ClientId", config.Creds.ClientId);
-            Set("ClientSecret", config.Creds.ClientSecret);
+            Set("ClientId", config.Creds.Id);
+            Set("ClientSecret", config.Creds.Secret);
             Set("Logging", config.Logging.ToString());
             Set("Simulation", config.Simulation.ToString());
 

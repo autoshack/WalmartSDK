@@ -28,9 +28,6 @@
     <OutputPath>bin\Debug</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="resources\payloadMock\_mapping.json" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="resources\payloadMock\_mapping.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

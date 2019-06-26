@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Base.Http
     {
         public static IFetcherFactory FetcherFactory = new Http.Fetcher.FetcherFactory();
 
-        protected IHttpConfig config;
+        private IHttpConfig config;
 
         public IFetcher Fetcher { get; private set; }
 

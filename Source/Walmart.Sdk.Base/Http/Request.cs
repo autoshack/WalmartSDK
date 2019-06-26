@@ -20,7 +20,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Org.BouncyCastle.Utilities.Encoders;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 
@@ -28,7 +27,7 @@ namespace Walmart.Sdk.Base.Http
 {
     public class Request: IRequest
     {
-        private Primitive.Config.IRequestConfig config;
+        protected Primitive.Config.IRequestConfig config;
         public Primitive.Config.IRequestConfig Config { get { return config; } }
         public string EndpointUri { get; set; }
         public HttpRequestMessage HttpRequest { get; }
@@ -85,28 +84,31 @@ namespace Walmart.Sdk.Base.Http
 
         public void FinalizePreparation()
         {
-          
-            HttpRequest.RequestUri = new Uri(config.BaseUrl + EndpointUri + BuildQueryParams());
+            HttpRequest.Headers.Add("User-Agent", config.UserAgent.Replace(" ", "_"));
+            HttpRequest.RequestUri = EndpointUri.StartsWith("http")?new Uri(EndpointUri + BuildQueryParams()) : new Uri(config.BaseUrl + EndpointUri + BuildQueryParams());
+            // call to genereate walmart headers should be done when RequestUri already defined
+            // we need it's value to generate signature header
             AddWalmartHeaders();
         }
 
-        private void AddWalmartHeaders()
+        protected virtual void AddWalmartHeaders()
         {
-            HttpRequest.Headers.Clear();
-            var authHeaderValue = GetAuthorizationHeader();
+            string timestamp = Util.DigitalSignature.GetCurrentTimestamp();
+            string signature = GetSignature(timestamp);
 
+            var creds = config.Credentials;
+            HttpRequest.Headers.Add("WM_SEC.AUTH_SIGNATURE", signature);
+            HttpRequest.Headers.Add("WM_SEC.TIMESTAMP", timestamp);
+            HttpRequest.Headers.Add("WM_CONSUMER.CHANNEL.TYPE", config.ChannelType);
+            HttpRequest.Headers.Add("WM_CONSUMER.ID", creds.Id);
             HttpRequest.Headers.Add("WM_SVC.NAME", config.ServiceName);
-            HttpRequest.Headers.Add("WM_QOS.CORRELATION_ID", config.ServiceName);
-            HttpRequest.Headers.Add("Authorization", $"Basic {authHeaderValue}");
-            HttpRequest.Headers.Add("Accept", GetAcceptType());
-
-            if (!string.IsNullOrEmpty(config.AccessToken))
-            {
-                HttpRequest.Headers.Add("WM_SEC.ACCESS_TOKEN",config.AccessToken);
-            }
+            HttpRequest.Headers.Add("WM_QOS.CORRELATION_ID", Util.DigitalSignature.GetCorrelationId());
+            HttpRequest.Headers.Add("WM_TENANT_ID",config.TenantId);
+            HttpRequest.Headers.Add("WM_LOCALE_ID", config.LocaleId);
+            HttpRequest.Headers.Add("Accept", GetContentType());
         }
 
-        public string GetAcceptType()
+        public virtual string GetContentType()
         {
             switch (config.ApiFormat)
             {
@@ -117,36 +119,7 @@ namespace Walmart.Sdk.Base.Http
                     return "application/xml";
             }
         }
-        public string GetContentType()
-        {
-            switch (config.ContentType)
-            {
-                case ContentTypeFormat.JSON:
-                    return "application/json";
-                case ContentTypeFormat.FORM_URLENCODED:
-                    return "application/x-www-form-urlencoded";
-                default:
-                case ContentTypeFormat.XML:
-                    return "application/xml";
-              
-            }
-        }
 
-        private string GetAuthorizationHeader()
-        {
-           return Base64Encode($"{config.Credentials.ClientId}:{config.Credentials.ClientSecret}");
-        }
-
-        private string Base64Encode(string plainText)
-        {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-
-        private void SetAccessToken(string accessToken)
-        {
-            this.Config.AccessToken = accessToken;
-        }
         private string GetSignature(string timestamp)
         {
             if (config.Credentials is null)
@@ -159,7 +132,7 @@ namespace Walmart.Sdk.Base.Http
             var httpMethod = HttpRequest.Method.Method.ToUpper();
             // Construct the string to sign
             string stringToSign = string.Join("\n", new List<string>() {
-                //creds.ConsumerId,
+                creds.Id,
                 requestUri,
                 httpMethod,
                 timestamp
@@ -167,12 +140,12 @@ namespace Walmart.Sdk.Base.Http
 
             try
             {
-                return Util.DigitalSignature.SignData(stringToSign, creds.ClientSecret);
+                return Util.DigitalSignature.SignData(stringToSign, creds.Secret);
             }
             catch (System.Exception ex)
             {
                 //pop up this to the user of SDK 
-                throw Base.Exception.SignatureException.Factory(creds.ClientId, requestUri, httpMethod, ex);
+                throw Base.Exception.SignatureException.Factory(creds.Secret, requestUri, httpMethod, ex);
             }
         }
     }

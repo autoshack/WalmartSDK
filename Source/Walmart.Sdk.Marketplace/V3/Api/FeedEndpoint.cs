@@ -21,7 +21,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Base.Primitive;
     using Walmart.Sdk.Marketplace.V3.Payload.Feed;
 
-    public class FeedEndpoint: Base.Primitive.BaseEndpoint
+    public class FeedEndpoint: ApiEndpoint
     {
         public FeedEndpoint(Base.Primitive.IEndpointClient apiClient) : base(apiClient)
         {
@@ -34,8 +34,8 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = string.Format("/v3/feeds/{0}", feedId);
-
+        
+            request.EndpointUri = BuildEndpointUrl( $"feeds/{feedId}");
             // by default it's false and we don't need to send it
             if (includeDetails) request.QueryParams.Add("includeDetails", "true"); 
             if (offset > 0) request.QueryParams.Add("offset", offset.ToString());
@@ -52,7 +52,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = "/v3/feeds";
+            request.EndpointUri = BuildEndpointUrl( "feeds");
 
             if (offset > 0) request.QueryParams.Add("offset", offset.ToString());
             if (limit > 0) request.QueryParams.Add("limit", limit.ToString());
@@ -69,7 +69,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = "/v3/feeds";
+            request.EndpointUri = BuildEndpointUrl("feeds");
 
             request.QueryParams.Add("feedType", feedType.ToString());
             request.AddMultipartContent(file);

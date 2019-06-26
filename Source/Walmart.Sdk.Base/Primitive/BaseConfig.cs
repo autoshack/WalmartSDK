@@ -26,9 +26,11 @@ namespace Walmart.Sdk.Base.Primitive
     public class BaseConfig: IRequestConfig, IApiClientConfig
     {
         public Credentials Credentials { get; private set; }
-        public ContentTypeFormat ContentType { get; set; }
+        public string AccessToken { get; set; }
         public string BaseUrl { get; set; } = "https://marketplace.walmartapis.com";
-        virtual public string ServiceName { get; set; } = "Walmart Marketplace";
+        public AuthenticationType AuthType { get; set; }
+        public string CountryPrefix { get; set; } = "";
+        virtual public string ServiceName { get; set; } = "";
         public string ChannelType { get; set; }
         public string UserAgent { get; set; }
         public ApiFormat PayloadFormat { get; set; } = ApiFormat.XML;
@@ -39,18 +41,23 @@ namespace Walmart.Sdk.Base.Primitive
             get { return PayloadFormat; }
             set { PayloadFormat = value; }
         }
-        public int RequestTimeoutMs { get; set; } = 100000; // in milliseconds
-        public string AccessToken { get; set; }
 
-        public BaseConfig(string clientId, string clientSecret,string accessToken="")
+        public ContentTypeFormat ContentType { get; set; }
+        public int RequestTimeoutMs { get; set; } = 100000; // in milliseconds
+        public string TenantId { get; set; } = "";
+        public string LocaleId { get; set; } = "";
+
+        public BaseConfig(string consumerId, string privateKey,AuthenticationType authType =  AuthenticationType.SignatureBased)
+
         {
-            AccessToken = accessToken;
             // generate sdk name from an assembly information
             var assembly = this.GetType().GetTypeInfo().Assembly;
-            UserAgent = string.Format(".Net_{0}_v{1}_{2}", assembly.GetName().Name, assembly.GetName().Version.ToString(), clientId);
+            UserAgent = string.Format(".Net_{0}_v{1}_{2}", assembly.GetName().Name, assembly.GetName().Version.ToString(), consumerId);
 
             // storing user credentials
-            Credentials = new Credentials(clientId, clientSecret);
+            Credentials = new Credentials(consumerId, privateKey);
+
+            AuthType = authType;
         }
 
         public IRequestConfig GetRequestConfig() => this;
@@ -69,17 +76,20 @@ namespace Walmart.Sdk.Base.Primitive
         JSON,
         FORM_URLENCODED
     }
-    
+
+
     // Merchant Credentials
     public class Credentials
     {
-        public string ClientId { get; private set; }
-        public string ClientSecret { get; private set; }
+        public string Secret { get; private set; }
+        public string Id { get; private set; }
 
-        public Credentials(string clientId, string clientSecret)
+        public Credentials(string id, string secret)
         {
-            this.ClientId = clientId;
-            this.ClientSecret = clientSecret;
+            Id = id;
+            Secret = secret;
         }
     }
+
+
 }

@@ -18,12 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Walmart.Sdk.Base.Primitive;
-using Walmart.Sdk.Base.Primitive.Config;
 
 namespace Walmart.Sdk.Base.Http
 {
     public interface IHttpFactory
     {
-        IHandler GetHttpHandler(Base.Primitive.Config.IHttpConfig cfg,ICacheProvider cacheProvider);
+        IHandler GetHttpHandler(Base.Primitive.Config.IHttpConfig cf, ICacheProvider cacheProvider);
     }
 }

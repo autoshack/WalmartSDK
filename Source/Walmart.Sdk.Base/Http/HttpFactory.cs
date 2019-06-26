@@ -18,15 +18,27 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Walmart.Sdk.Base.Primitive;
-using Walmart.Sdk.Base.Primitive.Config;
 
 namespace Walmart.Sdk.Base.Http
 {
     public class HttpFactory: IHttpFactory
     {
-        public IHandler GetHttpHandler(IHttpConfig cfg, ICacheProvider cacheProvider)
+        public IHandler GetHttpHandler(Base.Primitive.Config.IHttpConfig cfg, ICacheProvider cacheProvider)
         {
-            return new Http.Handler(cfg);
+            switch (cfg.AuthType)
+            {
+                case AuthenticationType.OAuth:
+                {
+                    return new OAuthHttpHandler(cfg,cacheProvider);
+                }
+
+                case AuthenticationType.SignatureBased:
+                default:
+                {
+                    return new Handler(cfg);
+                }
+            }
+
         }
     }
 }

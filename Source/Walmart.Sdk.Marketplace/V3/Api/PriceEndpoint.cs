@@ -27,7 +27,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Marketplace.V3.Payload.Cpa;
     using Walmart.Sdk.Base.Primitive;
 
-    public class PriceEndpoint: Base.Primitive.BaseEndpoint
+    public class PriceEndpoint: ApiEndpoint
     {
         private FeedEndpoint feedApi;
 
@@ -48,7 +48,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = "/v3/price";
+            request.EndpointUri = BuildEndpointUrl("price"); 
             var payload = new StreamReader(stream).ReadToEnd();
             request.HttpRequest.Content = new StringContent(payload);
             // have to explicitly set this header for content, otherwise it also has encodding=utf-8
@@ -72,7 +72,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = "/v3/cppreference";
+            request.EndpointUri = BuildEndpointUrl("cppreference"); 
             string content = JsonConvert.SerializeObject(new Payload.Cpa.Enrollment()
             {
                 Enroll = enroll

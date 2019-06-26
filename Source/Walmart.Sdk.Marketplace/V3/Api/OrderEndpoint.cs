@@ -23,7 +23,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Base.Primitive;
     using Walmart.Sdk.Marketplace.V3.Api.Request;
 
-    public class OrderEndpoint : BaseEndpoint
+    public class OrderEndpoint : ApiEndpoint
     {
         private enum OrderAction
         {
@@ -45,7 +45,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
 
             var request = CreateRequest();
 
-            request.EndpointUri = "/v3/orders/released";
+            request.EndpointUri = BuildEndpointUrl("orders/released");
 
             if (limit < 1) limit = 1;
             if (limit > 200) limit = 200;
@@ -65,7 +65,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = String.Format("/v3/orders/released/{0}", nextCursor);
+            request.EndpointUri = BuildEndpointUrl($"orders/released{nextCursor}"); 
             var response = await client.GetAsync(request);
             var result = await ProcessResponse<OrdersListType>(response);
             return result;
@@ -77,7 +77,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = String.Format("/v3/orders/{0}", purchaseOrderId);
+            request.EndpointUri = BuildEndpointUrl($"orders/{purchaseOrderId}");
             var response = await client.GetAsync(request);
             var result = await ProcessResponse<Order>(response);
             return result;
@@ -90,7 +90,8 @@ namespace Walmart.Sdk.Marketplace.V3.Api
 
             var request = CreateRequest();
             filter.FullfilRequest(request);
-            request.EndpointUri = "/v3/orders";
+            request.EndpointUri =  BuildEndpointUrl("orders");
+            
             var response = await client.GetAsync(request);
             var result = await ProcessResponse<OrdersListType>(response);
             return result;
@@ -102,7 +103,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            request.EndpointUri = String.Format("/v3/orders/{0}", nextCursor);
+            request.EndpointUri = BuildEndpointUrl($"orders/{nextCursor}");
             var response = await client.GetAsync(request);
             var result = await ProcessResponse<OrdersListType>(response);
             return result;
@@ -136,7 +137,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             {
                 request.AddMultipartContent(stream);
             }
-            request.EndpointUri = String.Format("/v3/orders/{0}/{1}", purchaseOrderId, action);
+            request.EndpointUri = BuildEndpointUrl($"orders/{purchaseOrderId}/{action}"); 
             var response = await client.PostAsync(request);
             return response;
         }

@@ -24,5 +24,8 @@ namespace Walmart.Sdk.Base.Primitive.Config
     {
         Config.IRequestConfig GetRequestConfig();
         ApiFormat ApiFormat { get; }
+        AuthenticationType AuthType { get; set; }
+
+        string CountryPrefix { get; set; }
     }
 }

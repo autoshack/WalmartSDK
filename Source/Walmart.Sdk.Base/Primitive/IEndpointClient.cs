@@ -17,6 +17,7 @@ limitations under the License.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Walmart.Sdk.Base.Primitive.Config;
 using Walmart.Sdk.Base.Serialization;
 
 namespace Walmart.Sdk.Base.Primitive
@@ -24,6 +25,8 @@ namespace Walmart.Sdk.Base.Primitive
     public interface IEndpointClient
     {
         Http.IEndpointHttpHandler GetHttpHandler();
-        Config.IEndpointConfig GetEndpointConfig();
+
+        IEndpointConfig GetEndpointConfig();
+
     }
 }

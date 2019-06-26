@@ -41,7 +41,8 @@ namespace Walmart.Sdk.Base.Primitive
 
         protected Request CreateRequest()
         {
-            return new Request(config.GetRequestConfig());
+            IRequestFactory requestFactory = new RequestFactory();
+            return requestFactory.CreateRequest(config);
         }
 
         public async Task<TPayload> ProcessResponse<TPayload>(IResponse response)

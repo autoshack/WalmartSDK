@@ -21,15 +21,17 @@ namespace Walmart.Sdk.Base.Http
             _fetcher = fetcher;
         }
 
-        public async Task<string> RetrieveAccessToken(Credentials credentials)
+        public async Task<string> RetrieveAccessToken(IRequestConfig config)
         {
-            IRequestConfig config = new BaseConfig(credentials.ClientId, credentials.ClientSecret)
+            IRequestConfig tokenRequestConfig = new BaseConfig(config.Credentials.Id, config.Credentials.Secret)
             {
                 ContentType = ContentTypeFormat.FORM_URLENCODED,
-                ApiFormat = ApiFormat.JSON
+                ApiFormat = ApiFormat.JSON,
+                ServiceName = config.ServiceName,
+                AuthType = AuthenticationType.OAuth
             };
 
-            var request = new Request(config)
+            var request = new OAuthRequest(tokenRequestConfig)
             {
                 EndpointUri = "/v3/token",
                 Method = HttpMethod.Post,
@@ -70,6 +72,6 @@ namespace Walmart.Sdk.Base.Http
 
     internal interface IAccessTokenFactory
     {
-        Task<string> RetrieveAccessToken(Credentials credentials);
+        Task<string> RetrieveAccessToken(IRequestConfig config);
     }
 }

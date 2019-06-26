@@ -20,7 +20,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     using Walmart.Sdk.Base.Http;
     using Walmart.Sdk.Marketplace.V3.Payload.Feed;
 
-    public class InventoryEndpoint: Base.Primitive.BaseEndpoint
+    public class InventoryEndpoint: ApiEndpoint
     {
         private FeedEndpoint feedApi;
 

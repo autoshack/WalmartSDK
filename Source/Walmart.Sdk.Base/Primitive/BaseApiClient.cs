@@ -19,21 +19,28 @@ using System.Collections.Generic;
 using System.Text;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Http.Retry;
+using Walmart.Sdk.Base.Primitive.Config;
 using Walmart.Sdk.Base.Serialization;
 
 namespace Walmart.Sdk.Base.Primitive
 {
     public abstract class BaseApiClient: IApiClient, IEndpointClient
     {
-        protected IHttpFactory httpFactory = new OAuthHttpFactory();
+        protected IHttpFactory httpFactory = new HttpFactory();
         
         protected IHandler httpHandler;
         public IEndpointHttpHandler GetHttpHandler() => httpHandler;
+        public IEndpointConfig GetEndpointConfig()
+        {
+            return config;
+        }
 
-        protected Config.IEndpointConfig config;
-        public Config.IEndpointConfig GetEndpointConfig() => config;
+        protected Config.IApiClientConfig config;
 
-        public BaseApiClient(Config.IApiClientConfig cfg,ICacheProvider cacheProvider)
+        public Config.IApiClientConfig GetConfig() => config;
+
+
+        public BaseApiClient(Config.IApiClientConfig cfg, ICacheProvider cacheProvider)
         {
             config = cfg;
             httpHandler = httpFactory.GetHttpHandler(cfg,cacheProvider);

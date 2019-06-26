@@ -17,12 +17,15 @@ limitations under the License.
 */
 
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Walmart.Sdk.Marketplace.V2.Payload.Item;
 using Walmart.Sdk.Marketplac.Sample.Base;
 using Walmart.Sdk.Marketplace.V3.Payload.Feed;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
+using Walmart.Sdk.Marketplace.V3.Payload.Item;
 
 namespace Walmart.Sdk.Marketplace.Sample.Controllers
 {
@@ -115,7 +118,110 @@ namespace Walmart.Sdk.Marketplace.Sample.Controllers
                 return GetResult<V2.Payload.Feed.FeedAcknowledgement, V3.Api.Exception.ApiException>(taskV2);
             }
 
-            var taskV3 = EndpointV3.BulkItemsUpdate(File.OpenRead(path));
+            var item = new MPItem()
+            {
+                processMode = MPItemProcessMode.CREATE,
+                sku = "12345",
+
+                productIdentifiers = new[]
+                {
+                    new productIdentifier()
+                    {
+                        productId = "828028624691",
+                        productIdType = productIdentifierProductIdType.UPC
+                    }
+                },
+                MPOffer = new MPOffer()
+                {
+                    price = 100,
+                    ProductTaxCode = "2039699",
+                    ShippingWeight = new MPOfferShippingWeight()
+                    {
+                        measure = 10,
+                        unit = MPOfferShippingWeightUnit.lb
+                    },
+                  
+
+                },
+                MPProduct = new MPProduct()
+                {
+                    productName = "Front Rear Set (4) Complete Strut Assembly For 00-2004 2005 2006 Hyundai Elantra",
+                    additionalProductAttributes = new[]
+                    {
+                        new additionalProductAttribute()
+                        {
+                            productAttributeName = "custom key",
+                            productAttributeValue = "1234"
+                        }
+                    },
+                    category = new category()
+                    {
+                        Item = new Vehicle()
+                        {
+                            Item = new VehiclePartsAndAccessories()
+                            {
+                                shortDescription = "<h1>This is a short description of the item</h1>",
+                                mainImageUrl = "https://i.ebayimg.com/images/g/LpAAAOSw0cVc-xzZ/s-l1600.jpg",
+                                compatibleCars = "Hyundai Elantra 2006; Hyundai Elantra 2007; Hyundai Elantra 2008",
+                                keyFeatures = new[]
+                                {
+                                    "key feature 1",
+                                    "key feature 2",
+                                    "key feature 3",
+                                },
+
+                                count = "1",
+                                features = new[]
+                                {
+                                    "feature 1",
+                                    "feature 2"
+                                },
+
+                                brand = "Prime Choice",
+
+                                hasWarrantySpecified = true,
+                                hasWarranty =VehiclePartsAndAccessoriesHasWarranty.No,
+
+                                //WHY on earth are these required?
+                                sportsLeague = "test league", 
+
+                                amps = new VehiclePartsAndAccessoriesAmps() 
+                                {
+                                    unit = VehiclePartsAndAccessoriesAmpsUnit.A,
+                                    measure = 0
+                                },
+                                isChemicalSpecified = true,
+                                isChemical=VehiclePartsAndAccessoriesIsChemical.No,
+                                isPoweredSpecified = true,
+                                isPowered = VehiclePartsAndAccessoriesIsPowered.No,
+                                lightBulbType = "test bulb",
+                                saeDotCompliantSpecified = true,
+                                saeDotCompliant = VehiclePartsAndAccessoriesSaeDotCompliant.No,
+                               
+
+                            }
+                        },
+                    },
+                },
+
+            };
+
+            var itemFeed = new MPItemFeed()
+            {
+                MPItem = new[]
+                {
+                    item
+                },
+                MPItemFeedHeader = new MPItemFeedHeader()
+                {
+                    version = MPItemFeedHeaderVersion.Item31
+                }
+            };
+
+            var xml = this.Serializer.Serialize(itemFeed);
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
+           // var stream = File.OpenRead( @"C:\Users\asharaky\Documents\Projects\WalmartSDK\Sample\resources\requestExamples\v3\itemFeed.xml");
+            var taskV3 = EndpointV3.BulkItemsUpdate(stream);
             return GetResult<V3.Payload.Feed.FeedAcknowledgement, V3.Api.Exception.ApiException>(taskV3);
         }
 

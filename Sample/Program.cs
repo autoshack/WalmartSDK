@@ -27,11 +27,7 @@ using System;
 
 namespace Walmart.Sdk.Marketplace.Sample
 {
-    public enum ApiVersion
-    {
-        V2,
-        V3
-    }
+   
 
     class Program
     {
