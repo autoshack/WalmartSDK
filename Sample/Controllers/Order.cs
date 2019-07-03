@@ -688,7 +688,7 @@ namespace Walmart.Sdk.Marketplace.Sample.Controllers
             }
             else
             {
-                var taskV3 = EndpointV3.AckOrder(orderId);
+                var taskV3 = EndpointV3.AcknowledgeOrder(orderId);
                 return GetResult<V3.Payload.Order.Order, V3.Api.Exception.ApiException>(taskV3);
             }
         }

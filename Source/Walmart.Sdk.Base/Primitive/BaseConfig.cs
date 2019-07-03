@@ -25,7 +25,7 @@ namespace Walmart.Sdk.Base.Primitive
     // Main configuration class, holds all global settings for SDK
     public class BaseConfig: IRequestConfig, IApiClientConfig
     {
-        public Credentials Credentials { get; private set; }
+        public Credentials Credentials { get; set; }
         public string AccessToken { get; set; }
         public string BaseUrl { get; set; } = "https://marketplace.walmartapis.com";
         public AuthenticationType AuthType { get; set; }
@@ -47,17 +47,11 @@ namespace Walmart.Sdk.Base.Primitive
         public string TenantId { get; set; } = "";
         public string LocaleId { get; set; } = "";
 
-        public BaseConfig(string consumerId, string privateKey,AuthenticationType authType =  AuthenticationType.SignatureBased)
-
+        public BaseConfig()
         {
             // generate sdk name from an assembly information
             var assembly = this.GetType().GetTypeInfo().Assembly;
-            UserAgent = string.Format(".Net_{0}_v{1}_{2}", assembly.GetName().Name, assembly.GetName().Version.ToString(), consumerId);
-
-            // storing user credentials
-            Credentials = new Credentials(consumerId, privateKey);
-
-            AuthType = authType;
+            UserAgent = string.Format(".Net_{0}_v{1}", assembly.GetName().Name, assembly.GetName().Version.ToString());
         }
 
         public IRequestConfig GetRequestConfig() => this;
@@ -81,14 +75,9 @@ namespace Walmart.Sdk.Base.Primitive
     // Merchant Credentials
     public class Credentials
     {
-        public string Secret { get; private set; }
-        public string Id { get; private set; }
+        public string Secret { get; set; }
+        public string Id { get; set; }
 
-        public Credentials(string id, string secret)
-        {
-            Id = id;
-            Secret = secret;
-        }
     }
 
 

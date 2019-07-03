@@ -30,7 +30,7 @@ namespace Walmart.Sdk.Base.Http
         protected Primitive.Config.IRequestConfig config;
         public Primitive.Config.IRequestConfig Config { get { return config; } }
         public string EndpointUri { get; set; }
-        public HttpRequestMessage HttpRequest { get; }
+        public HttpRequestMessage HttpRequest { get; private set; }
         public Dictionary<string, string> QueryParams { get; set; } = new Dictionary<string, string>();
 
         public HttpMethod Method
@@ -148,5 +148,12 @@ namespace Walmart.Sdk.Base.Http
                 throw Base.Exception.SignatureException.Factory(creds.Secret, requestUri, httpMethod, ex);
             }
         }
+
+        public async Task RecreateHttpRequest()
+        {
+            HttpRequest=await this.HttpRequest.CloneAsync();
+        }
     }
+
+    
 }

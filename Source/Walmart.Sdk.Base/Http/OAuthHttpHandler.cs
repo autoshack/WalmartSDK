@@ -34,8 +34,8 @@ namespace Walmart.Sdk.Base.Http
             }
             catch (InvalidAccessTokenException ex)
             {
+                await request.RecreateHttpRequest();
                 await RefreshAccessToken(request.Config);
-                //await request.RecreateRequestAsync();
                 return await ExecuteAsync(request);
             }
         }

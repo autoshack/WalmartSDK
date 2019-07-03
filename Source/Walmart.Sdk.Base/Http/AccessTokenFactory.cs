@@ -23,8 +23,13 @@ namespace Walmart.Sdk.Base.Http
 
         public async Task<string> RetrieveAccessToken(IRequestConfig config)
         {
-            IRequestConfig tokenRequestConfig = new BaseConfig(config.Credentials.Id, config.Credentials.Secret)
+            IRequestConfig tokenRequestConfig = new BaseConfig
             {
+                Credentials = new Credentials()
+                {
+                    Id=config.Credentials.Id,
+                    Secret = config.Credentials.Secret
+                },
                 ContentType = ContentTypeFormat.FORM_URLENCODED,
                 ApiFormat = ApiFormat.JSON,
                 ServiceName = config.ServiceName,

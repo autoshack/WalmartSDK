@@ -23,9 +23,7 @@ namespace Walmart.Sdk.Marketplace
 {
     public class ClientConfig: Base.Primitive.BaseConfig
     {
-        public ClientConfig(string clientId, string clientSecret,AuthenticationType authType) : base(clientId, clientSecret, authType)
-        { }
-        
+
         override public string ServiceName { get; set; } = "Walmart Marketplace";
     }
 }

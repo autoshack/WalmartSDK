@@ -25,6 +25,8 @@ using Walmart.Sdk.Base.Http.Exception;
 using Walmart.Sdk.Base.Primitive;
 using System.Net.Sockets;
 using System.Net;
+using System.IO.Compression;
+using System.IO;
 
 namespace Walmart.Sdk.Base.Http.Fetcher
 {
@@ -62,6 +64,22 @@ namespace Walmart.Sdk.Base.Http.Fetcher
                     // 429 Too many requests
                     throw new ThrottleException("HTTP request was throttled");
                 }
+
+                if(response.StatusCode == (HttpStatusCode)400)
+                {
+                    var responseBytes = await response.RawResponse.Content.ReadAsByteArrayAsync();
+                    var responseText = new StreamReader(new GZipStream(new MemoryStream(responseBytes), CompressionMode.Decompress)).ReadToEnd();
+                    if (responseText.ToUpper().Contains("INVALID_TOKEN"))
+                    {
+                        throw new InvalidAccessTokenException("Access token has expired");
+                    }
+                }
+
+                if (response.StatusCode == (HttpStatusCode)401)
+                {
+                   throw new InvalidAccessTokenException("Access token is not valid");
+                }
+
 
                 return response;
             }

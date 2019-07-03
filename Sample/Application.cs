@@ -53,12 +53,15 @@ namespace Walmart.Sdk.Marketplace.Sample
         private void InitSdk()
         {
 
-
-            var ClientConfig = new ClientConfig(
-                "f986fe2d-f6ca-4b81-b4b3-34feafcfb781",
-                "Kli2RavIwIk-U1BAY27OKfAmWTYNbmUwEJ01WdKU7kTvD71iP5Yn6ZL5NB7y2f6V14RFvfuCjmWcwXBgksOh-g",
-                AuthenticationType.OAuth
-            );
+            var ClientConfig = new ClientConfig()
+            {
+                Credentials = new Credentials(){
+                    Id="f986fe2d-f6ca-4b81-b4b3-34feafcfb781",
+                    Secret = "Kli2RavIwIk-U1BAY27OKfAmWTYNbmUwEJ01WdKU7kTvD71iP5Yn6ZL5NB7y2f6V14RFvfuCjmWcwXBgksOh-g"
+                },
+                AuthType = AuthenticationType.OAuth
+            };
+               
 
             /*****US*********/
             //var ClientConfig = new ClientConfig(

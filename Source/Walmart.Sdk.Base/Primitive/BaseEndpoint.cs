@@ -45,10 +45,14 @@ namespace Walmart.Sdk.Base.Primitive
             return requestFactory.CreateRequest(config);
         }
 
-        public async Task<TPayload> ProcessResponse<TPayload>(IResponse response)
+        public async Task<TPayload> ProcessResponse<TPayload>(IResponse response) where TPayload:new()
         {
             if (!response.IsSuccessful)
             {
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new TPayload();
+                }
                 var rawErrors = await response.GetPayloadAsString();
                 System.Exception ex;
                 try

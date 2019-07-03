@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Walmart.Sdk.Base.Http
 {
@@ -31,6 +32,7 @@ namespace Walmart.Sdk.Base.Http
 
         Primitive.Config.IRequestConfig Config { get; }
 
+        Task RecreateHttpRequest();
     }
 
  

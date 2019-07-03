@@ -79,7 +79,11 @@ namespace Walmart.Sdk.Marketplace.Sample
             var credsJson = new StreamReader(File.OpenRead(Directory.GetCurrentDirectory() + string.Format("{0}settings{1}credentials.json", ds, ds))).ReadToEnd();
             var credsReader = new JsonTextReader(new StringReader(credsJson));
             var creds = json.Deserialize<Dictionary<string, string>>(credsReader);
-            this.Creds = new Credentials(creds["ConsumerId"], creds["PrivateKey"]);
+            this.Creds = new Credentials()
+            {
+                Id = creds["ConsumerId"],
+                Secret = creds["PrivateKey"]
+            };
         }
     }
 }
