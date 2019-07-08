@@ -59,8 +59,8 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             request.QueryParams.Add("createdStartDate", createdStartDate.ToString("yyyy-MM-ddTHH:mm:ss"));
             request.QueryParams.Add("createdEndDate", createdEndDate.ToString("yyyy-MM-ddTHH:mm:ss"));
 
-            var response = await client.GetAsync(request);
-            var result = await ProcessResponse<OrdersListType>(response);
+            var result = await ProcessRequestTask<OrdersListType>(client.GetAsync(request));
+
             return result;
          
            
@@ -73,8 +73,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
 
             var request = CreateRequest();
             request.EndpointUri = BuildEndpointUrl($"orders/released{nextCursor}");
-            var response = await client.GetAsync(request);
-            var result = await ProcessResponse<OrdersListType>(response);
+            var result = await ProcessRequestTask<OrdersListType>(client.GetAsync(request));
             return result;
         }
 
@@ -85,8 +84,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
 
             var request = CreateRequest();
             request.EndpointUri = BuildEndpointUrl($"orders/{purchaseOrderId}");
-            var response = await client.GetAsync(request);
-            var result = await ProcessResponse<Order>(response);
+            var result = await ProcessRequestTask<Order>(client.GetAsync(request));
             return result;
         }
 
@@ -98,9 +96,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             var request = CreateRequest();
             filter.FullfillRequest(request);
             request.EndpointUri = BuildEndpointUrl("orders");
-
-            var response = await client.GetAsync(request);
-            var result = await ProcessResponse<OrdersListType>(response);
+            var result = await ProcessRequestTask<OrdersListType>(client.GetAsync(request));
             return result;
         }
 
@@ -111,8 +107,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
 
             var request = CreateRequest();
             request.EndpointUri = BuildEndpointUrl($"orders/{nextCursor}");
-            var response = await client.GetAsync(request);
-            var result = await ProcessResponse<OrdersListType>(response);
+            var result = await ProcessRequestTask<OrdersListType>(client.GetAsync(request));
             return result;
         }
 
@@ -154,8 +149,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
 
-            var response = await UpdateOrder(purchaseOrderId, OrderAction.Ack);
-            var result = await ProcessResponse<Order>(response);
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Ack));
             return result;
         }
 
@@ -164,8 +158,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
 
-            var response = await UpdateOrder(purchaseOrderId, OrderAction.Cancel);
-            var result = await ProcessResponse<Order>(response);
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Cancel));
             return result;
         }
 
@@ -173,9 +166,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
-
-            var response = await UpdateOrder(purchaseOrderId, OrderAction.Refund);
-            var result = await ProcessResponse<Order>(response);
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Refund));
             return result;
         }
 
@@ -183,9 +174,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
-
-            var response = await UpdateOrder(purchaseOrderId, OrderAction.Shipping, payload);
-            var result = await ProcessResponse<Order>(response);
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Refund,payload));
             return result;
         }
 

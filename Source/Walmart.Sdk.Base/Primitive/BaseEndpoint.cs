@@ -46,11 +46,11 @@ namespace Walmart.Sdk.Base.Primitive
             return requestFactory.CreateRequest(config);
         }
 
-        public async Task<T> ProcessRequest<T>(Request httpRequest) where T : new()
+        public async Task<T> ProcessRequestTask<T>(Task<IResponse> requestTask) where T : new()
         {
             try
             {
-                var response = await client.GetAsync(httpRequest);
+                var response = await requestTask;
                 var result = await ProcessResponse<T>(response);
                 return result;
             }
