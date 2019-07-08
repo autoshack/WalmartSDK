@@ -33,7 +33,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api.Request
         public DateTime? ToExpectedShipDate;
         public int Limit = 20;
 
-        public void FullfilRequest(Base.Http.Request request)
+        public void FullfillRequest(Base.Http.Request request)
         {
             if (!String.IsNullOrEmpty(Sku)) request.QueryParams.Add("sku", Sku);
             if (!String.IsNullOrEmpty(CustomerOrderId)) request.QueryParams.Add("customerOrderId", CustomerOrderId);

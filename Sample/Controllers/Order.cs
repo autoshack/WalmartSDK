@@ -20,10 +20,13 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Walmart.Sdk.Marketplac.Sample.Base;
+using Walmart.Sdk.Marketplace.Enums;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
 using Walmart.Sdk.Marketplace.V2.Api.Request;
 using Walmart.Sdk.Marketplace.V2.Payload.Feed;
-using Walmart.Sdk.Marketplace.V2.Payload.Order;
+using Walmart.Sdk.Marketplace.V3.Payload.Order;
+using OrderLineStatusValueType = Walmart.Sdk.Marketplace.V2.Payload.Order.OrderLineStatusValueType;
+using OrdersListType = Walmart.Sdk.Marketplace.V2.Payload.Order.OrdersListType;
 
 namespace Walmart.Sdk.Marketplace.Sample.Controllers
 {
@@ -704,7 +707,44 @@ namespace Walmart.Sdk.Marketplace.Sample.Controllers
             }
             else
             {
-                var taskV3 = EndpointV3.ShippingUpdates(orderId, File.OpenRead(path));
+                //var taskV3 = EndpointV3.ShippingUpdates(orderId, File.OpenRead(path));
+                var taskV3 = EndpointV3.SendShippingUpdate(orderId, new OrderShipmentTrackingInformation()
+                    {
+                        OrderLines = new ShipmentOrderLines()
+                        {
+                            OrderLines = new List<ShipmentOrderLine>()
+                            {
+                                new ShipmentOrderLine()
+                                {
+                                    LineNumber = "1",
+                                    OrderLineStatuses = new ShipmentOrderLineStatuses()
+                                    {
+                                        OrderLineStatus = new ShipmentOrderLineStatus()
+                                        {
+                                            Status = "Shipped",
+                                            StatusQuantity = new ShipmentStatusQuantity()
+                                            {
+                                                Amount = 1,
+                                                UnitOfMeasurement = "Each"
+                                            },
+                                            TrackingInfo = new ShipmentTrackingInfo()
+                                            {
+                                                CarrierName = new ShipmentCarrierName()
+                                                {
+                                                    Carrier = ShippingCarrier.Airborne
+                                                },
+                                                MethodCode = ShippingMethodCode.Express,
+                                                ShipDateTime =  "2016-06-27T05:30:15.000Z",
+                                                TrackingNumber = "12345667",
+                                                TrackingURL = "http://ups.com/",
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                );
                 return GetResult<V3.Payload.Order.Order, V3.Api.Exception.ApiException>(taskV3);
             }
         }

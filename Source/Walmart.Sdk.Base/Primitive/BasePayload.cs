@@ -26,6 +26,6 @@ namespace Walmart.Sdk.Base.Primitive
 {
     public class BasePayload : IPayload
     {
-        public XmlSerializerNamespaces Xmlns { get; set; } = new XmlSerializerNamespaces();
+        public virtual XmlSerializerNamespaces Xmlns { get; set; } = new XmlSerializerNamespaces();
     }
 }

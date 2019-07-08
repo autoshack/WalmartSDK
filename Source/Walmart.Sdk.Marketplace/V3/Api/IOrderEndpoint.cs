@@ -16,7 +16,9 @@ namespace Walmart.Sdk.Marketplace.V3.Api
         Task<OrdersListType> GetAllReleasedOrders(string nextCursor);
         Task<Order> GetOrderById(string purchaseOrderId);
         Task<Order> RefundOrderLines(string purchaseOrderId, Stream stream);
-        Task<Order> ShippingUpdates(string purchaseOrderId, Stream stream);
-        
+        Task<Order> ShippingUpdates(string purchaseOrderId, string stream);
+
+        Task<Order> SendShippingUpdate(string purchaseOrderId,
+            OrderShipmentTrackingInformation shipmentTrackingInformation);
     }
 }

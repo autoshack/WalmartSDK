@@ -16,7 +16,8 @@ namespace Walmart.Sdk.Base.Http
         private ICacheProvider _cacheProvider;
         private IAccessTokenFactory _accessTokenFactory;
         private string accessTokenCacheKey = "access_token";
-
+        private int retriesCount = 0;
+        private const int MAX_REFRESH_TOKEN_RETRY_COUNT = 3;
         public OAuthHttpHandler(IHttpConfig apiConfig, ICacheProvider cacheProvider) : base(apiConfig)
         {
             //TODO: Change retry policy?
@@ -34,9 +35,19 @@ namespace Walmart.Sdk.Base.Http
             }
             catch (InvalidAccessTokenException ex)
             {
-                await request.RecreateHttpRequest();
-                await RefreshAccessToken(request.Config);
-                return await ExecuteAsync(request);
+                if (retriesCount < MAX_REFRESH_TOKEN_RETRY_COUNT)
+                {
+                    retriesCount++;
+                    await request.RecreateHttpRequest();
+                    await RefreshAccessToken(request.Config);
+                    return await ExecuteAsync(request);
+                }
+                else
+                {
+                    throw NoRetriesLeftException.Factory(retriesCount,
+                        new System.Exception($"Could not refresh the access token after {retriesCount} times"));
+                }
+               
             }
         }
 
@@ -53,7 +64,7 @@ namespace Walmart.Sdk.Base.Http
             if (accessToken is null)
             {
                 accessToken = await _accessTokenFactory.RetrieveAccessToken(config);
-                await this._cacheProvider.Set(accessTokenCacheKey, accessToken);
+                await _cacheProvider.Set(accessTokenCacheKey, accessToken);
             }
 
             return accessToken.ToString();

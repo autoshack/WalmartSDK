@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+using System.IO;
+using System.Text;
+using Walmart.Sdk.Base.Http.Exception;
+
 namespace Walmart.Sdk.Marketplace.V3.Api
 {
     using System;
@@ -39,7 +43,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             payloadFactory = new V3.Payload.PayloadFactory();
         }
 
-        public async Task<OrdersListType> GetAllReleasedOrders(DateTime createdStartDate, DateTime createdEndDate, int limit = 20)
+        public async Task<OrdersListType> GetAllReleasedOrders(DateTime createdStartDate, DateTime createdEndDate, int limit = 200)
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
@@ -58,6 +62,8 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             var response = await client.GetAsync(request);
             var result = await ProcessResponse<OrdersListType>(response);
             return result;
+         
+           
         }
 
         public async Task<OrdersListType> GetAllReleasedOrders(string nextCursor)
@@ -90,7 +96,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             await new ContextRemover();
 
             var request = CreateRequest();
-            filter.FullfilRequest(request);
+            filter.FullfillRequest(request);
             request.EndpointUri = BuildEndpointUrl("orders");
 
             var response = await client.GetAsync(request);
@@ -110,7 +116,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             return result;
         }
 
-        private async Task<IResponse> UpdateOrder(string purchaseOrderId, OrderAction desiredAction, System.IO.Stream stream = null)
+        private async Task<IResponse> UpdateOrder(string purchaseOrderId, OrderAction desiredAction, string payload=null)
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
@@ -134,9 +140,9 @@ namespace Walmart.Sdk.Marketplace.V3.Api
                     throw new Base.Exception.InvalidValueException("Unknown order action provided >" + action.ToString() + "<");
             }
             var request = CreateRequest();
-            if (stream != null)
+            if (!string.IsNullOrEmpty(payload))
             {
-                request.AddMultipartContent(stream);
+                request.AddPayload(payload);
             }
             request.EndpointUri = BuildEndpointUrl($"orders/{purchaseOrderId}/{action}");
             var response = await client.PostAsync(request);
@@ -173,14 +179,22 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             return result;
         }
 
-        public async Task<Order> ShippingUpdates(string purchaseOrderId, System.IO.Stream stream)
+        public async Task<Order> ShippingUpdates(string purchaseOrderId, string payload)
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
 
-            var response = await UpdateOrder(purchaseOrderId, OrderAction.Shipping);
+            var response = await UpdateOrder(purchaseOrderId, OrderAction.Shipping, payload);
             var result = await ProcessResponse<Order>(response);
             return result;
+        }
+
+        public async Task<Order> SendShippingUpdate(string purchaseOrderId, OrderShipmentTrackingInformation shipmentTrackingInformation)
+        {
+            var serializer = this.payloadFactory.GetSerializer(this.config.ApiFormat);
+            var serializedPayload = serializer.Serialize(shipmentTrackingInformation);
+            return await ShippingUpdates(purchaseOrderId, serializedPayload);
+           
         }
     }
 }

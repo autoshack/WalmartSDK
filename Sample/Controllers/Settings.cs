@@ -27,6 +27,7 @@ using Walmart.Sdk.Marketplace.V2.Api;
 using Walmart.Sdk.Marketplace.V2.Api.Exception;
 using Walmart.Sdk.Base.Http.Fetcher;
 using System.IO;
+using Walmart.Sdk.Marketplace.Enums;
 
 namespace Walmart.Sdk.Marketplace.Sample.Controllers
 {

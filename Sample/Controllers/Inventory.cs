@@ -17,6 +17,7 @@ limitations under the License.
 using System.IO;
 using System.Collections.Generic;
 using Walmart.Sdk.Marketplac.Sample.Base;
+using Walmart.Sdk.Marketplace.Enums;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
 
 namespace Walmart.Sdk.Marketplace.Sample.Controllers

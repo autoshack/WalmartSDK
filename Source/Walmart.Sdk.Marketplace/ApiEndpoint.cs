@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Walmart.Sdk.Base.Primitive;
 using Walmart.Sdk.Base.Primitive.Config;
+using Walmart.Sdk.Marketplace.Enums;
 
 namespace Walmart.Sdk.Marketplace
 {

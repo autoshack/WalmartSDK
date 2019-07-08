@@ -20,6 +20,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Walmart.Sdk.Base.Exception;
 using Walmart.Sdk.Base.Http;
 using Walmart.Sdk.Base.Primitive;
 
@@ -42,6 +43,10 @@ namespace Walmart.Sdk.Base.Http
         public Request(Primitive.Config.IRequestConfig cfg)
         {
             config = cfg;
+            if (string.IsNullOrEmpty(cfg?.Credentials?.Id) || string.IsNullOrEmpty(cfg?.Credentials.Secret))
+            {
+                throw new NullCredentialsException("The value for Id and Secret cannot be null or empty");
+            }
             HttpRequest = new HttpRequestMessage();
         }
 

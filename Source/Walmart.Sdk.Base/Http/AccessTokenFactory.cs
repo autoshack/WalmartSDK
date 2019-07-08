@@ -46,32 +46,13 @@ namespace Walmart.Sdk.Base.Http
 
             request.AddPayload($"grant_type={grantType}");
 
-            try
-            {
-                var response = await _fetcher.ExecuteAsync(request);
+            var response = await _fetcher.ExecuteAsync(request);
+            var serializerFactory = new SerializerFactory();
+            var serializer = serializerFactory.GetSerializer(request.Config.ApiFormat);
+            var responsePayload = await response.GetPayloadAsString();
+            var accessToken = serializer.Deserialize<AccessToken>(responsePayload);
 
-                if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
-                {
-                    // 503 Service Unavailable
-                    throw new GatewayException("Service is unavailable, gateway connection error");
-                }
-
-                if (response.StatusCode == (HttpStatusCode) 429)
-                {
-                    // 429 Too many requests
-                    throw new ThrottleException("HTTP request was throttled");
-                }
-
-                var serializerFactory = new SerializerFactory();
-                var serializer = serializerFactory.GetSerializer(request.Config.ApiFormat);
-                var responsePayload = await response.GetPayloadAsString();
-                var accessToken = serializer.Deserialize<AccessToken>(responsePayload);
-                return accessToken.Token;
-            }
-            catch (System.Exception ex)
-            {
-                throw new ConnectionException("An error occured while trying to retrieve token", ex);
-            }
+            return accessToken.Token;
         }
     }
 

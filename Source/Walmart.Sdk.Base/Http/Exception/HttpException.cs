@@ -24,6 +24,8 @@ namespace Walmart.Sdk.Base.Http.Exception
     {
         public HttpException(string message) : base(message)
         { }
+        public HttpException(string message,string response) : base(message,response)
+        { }
         public HttpException(string message, System.Exception exception) : base(message, exception)
         { }
     }

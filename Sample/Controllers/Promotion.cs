@@ -21,6 +21,7 @@ using System;
 using System.Net.Http;
 using Walmart.Sdk.Base.Serialization;
 using Walmart.Sdk.Marketplac.Sample.Base;
+using Walmart.Sdk.Marketplace.Enums;
 using Walmart.Sdk.Marketplace.Sample.Controllers;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
 using Walmart.Sdk.Marketplace.V2.Payload.Feed;

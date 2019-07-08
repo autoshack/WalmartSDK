@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Walmart.Sdk.Marketplac.Sample.Base;
+using Walmart.Sdk.Marketplace.Enums;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
 using Walmart.Sdk.Marketplace.V2.Payload.Feed;
 

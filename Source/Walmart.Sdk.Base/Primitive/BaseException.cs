@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,8 +25,24 @@ namespace Walmart.Sdk.Base.Primitive
 {
     public class BaseException: System.Exception
     {
-        public BaseException(string message): base(message)
-        { }
+        private IDictionary _data { get; set; }
+
+        public override IDictionary Data
+        {
+            get { return _data; }
+        }
+
+        public BaseException(string message) : base(message)
+        {
+
+        }
+
+        public BaseException(string message, string response) : base(message)
+        {
+            _data = new Dictionary<string, string>();
+            _data["Response"] = response;
+        }
+
         public BaseException(string message, System.Exception exception): base(message, exception)
         { }
     }

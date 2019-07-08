@@ -23,6 +23,7 @@ using System.IO;
 using System.Text;
 using Walmart.Sdk.Marketplace.V2.Payload.Item;
 using Walmart.Sdk.Marketplac.Sample.Base;
+using Walmart.Sdk.Marketplace.Enums;
 using Walmart.Sdk.Marketplace.V3.Payload.Feed;
 using Walmart.Sdk.Marketplace.Sample.QuizParams;
 using Walmart.Sdk.Marketplace.V3.Payload.Item;
