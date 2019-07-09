@@ -174,7 +174,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
-            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Refund,payload));
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Shipping,payload));
             return result;
         }
 
