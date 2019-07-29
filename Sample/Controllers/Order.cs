@@ -760,7 +760,33 @@ namespace Walmart.Sdk.Marketplace.Sample.Controllers
             }
             else
             {
-                var taskV3 = EndpointV3.CancelOrderLines(orderId, File.OpenRead(path));
+                var cancellationData = new OrderCancellation()
+                {
+                    OrderLines = new CancellationOrderLines()
+                    {
+                        OrderLine = new List<CancellationOrderLine>()
+                        {
+                            new CancellationOrderLine()
+                            {
+                                LineNumber = "1",
+                                OrderLineStatuses = new CancellationOrderLineStatuses()
+                                {
+                                    OrderLineStatus = new CancellationOrderLineStatus()
+                                    {
+                                        StatusQuantity = new CancellationStatusQuantity()
+                                        {
+                                            UnitOfMeasurement = "EACH",
+                                            Amount = 1
+                                        },
+                                        Status = "Cancelled",
+                                        CancellationReason = OrderCancellationReasons.SELLER_CANCEL_PRICING_ERROR
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                var taskV3 = EndpointV3.CancelOrderLines(orderId, cancellationData);
                 return GetResult<V3.Payload.Order.Order, V3.Api.Exception.ApiException>(taskV3);
             }
         }

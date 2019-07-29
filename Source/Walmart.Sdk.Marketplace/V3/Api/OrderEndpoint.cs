@@ -153,12 +153,13 @@ namespace Walmart.Sdk.Marketplace.V3.Api
             return result;
         }
 
-        public async Task<Order> CancelOrderLines(string purchaseOrderId, System.IO.Stream stream)
+        public async Task<Order> CancelOrderLines(string purchaseOrderId, OrderCancellation orderCancellationData)
         {
             // to avoid deadlock if this method is executed synchronously
             await new ContextRemover();
-
-            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Cancel));
+            var serializer = this.payloadFactory.GetSerializer(this.config.ApiFormat);
+            var serializedPayload = serializer.Serialize(orderCancellationData);
+            var result = await ProcessRequestTask<Order>(UpdateOrder(purchaseOrderId, OrderAction.Cancel,serializedPayload));
             return result;
         }
 

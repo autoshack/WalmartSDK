@@ -9,7 +9,7 @@ namespace Walmart.Sdk.Marketplace.V3.Api
     public interface IOrderEndpoint
     {
         Task<Order> AcknowledgeOrder(string purchaseOrderId);
-        Task<Order> CancelOrderLines(string purchaseOrderId, Stream stream);
+        Task<Order> CancelOrderLines(string purchaseOrderId, OrderCancellation orderCancellationData);
         Task<OrdersListType> GetAllOrders(OrderFilter filter);
         Task<OrdersListType> GetAllOrders(string nextCursor);
         Task<OrdersListType> GetAllReleasedOrders(DateTime createdStartDate, DateTime createdEndDate, int limit = 20);

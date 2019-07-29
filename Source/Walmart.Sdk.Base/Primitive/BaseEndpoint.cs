@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Walmart.Sdk.Base.Http;
@@ -46,7 +47,7 @@ namespace Walmart.Sdk.Base.Primitive
             return requestFactory.CreateRequest(config);
         }
 
-        public async Task<T> ProcessRequestTask<T>(Task<IResponse> requestTask) where T : new()
+        public async Task<T> ProcessRequestTask<T>(Task<IResponse> requestTask) 
         {
             try
             {
@@ -56,11 +57,19 @@ namespace Walmart.Sdk.Base.Primitive
             }
             catch (ResponseContentNotFoundException ex)
             {
-                return new T();
+                if (requestTask.Result.RawResponse.RequestMessage.Method == HttpMethod.Get)
+                {
+                    return default(T);
+                }
+                else
+                {
+                    throw;
+                }
+                
             }
         }
 
-        public async Task<TPayload> ProcessResponse<TPayload>(IResponse response) where TPayload:new()
+        public async Task<TPayload> ProcessResponse<TPayload>(IResponse response)
         {
             //if (!response.IsSuccessful)
             //{
