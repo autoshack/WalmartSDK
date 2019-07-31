@@ -57,36 +57,13 @@ namespace Walmart.Sdk.Base.Primitive
             }
             catch (ResponseContentNotFoundException ex)
             {
-                if (requestTask.Result.RawResponse.RequestMessage.Method == HttpMethod.Get)
-                {
-                    return default(T);
-                }
-                else
-                {
-                    throw;
-                }
-                
+                return default(T);
             }
         }
 
         public async Task<TPayload> ProcessResponse<TPayload>(IResponse response)
         {
-            //if (!response.IsSuccessful)
-            //{
-            //    var rawErrors = await response.GetPayloadAsString();
-            //    System.Exception ex;
-            //    try
-            //    {
-            //        ex = payloadFactory.CreateApiException(config.ApiFormat, rawErrors, response);
-            //    }
-            //    catch (System.Exception e)
-            //    {
-            //        var innerEx = new System.Exception("Error response is " + rawErrors, e);
-            //        throw new Base.Exception.InvalidValueException("Invalid error response received. Unable to parse with error!", innerEx);
-            //    }
 
-            //    throw ex;
-            //}
             string content = await response.GetPayloadAsString();
             var serializer = payloadFactory.GetSerializer(config.ApiFormat);
             return serializer.Deserialize<TPayload>(content);
